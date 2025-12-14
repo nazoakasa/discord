@@ -184,9 +184,36 @@ app.post('/api/channels/:channelId/messages', async (req, res) => {
   }
 });
 
-// Serve React app
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+// Serve HTML
+app.get('/', (req, res) => {
+  res.send(`
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Discord Client</title>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module">
+    import { createElement as h } from 'https://esm.sh/react@18';
+    import { createRoot } from 'https://esm.sh/react-dom@18/client';
+    
+    // フロントエンドコードはここに配置
+    const App = () => h('div', { className: 'p-8' }, 
+      h('h1', { className: 'text-2xl font-bold' }, 'Discord Client'),
+      h('p', null, 'Bot接続中...')
+    );
+    
+    createRoot(document.getElementById('root')).render(h(App));
+  </script>
+</body>
+</html>
+  `);
 });
 
 // Start server
